@@ -152,7 +152,7 @@
                 document.body.appendChild(script);
             }
 
-            function onMerchantData({merchant, signature, paymentIntent}) {
+            function onMerchantDataValues({merchant, signature, paymentIntent}) {
               const styles = {
                     merchantData: {
                       merchant: merchant,
@@ -228,11 +228,14 @@
                         }
                     }
                   };
+                  loadFormWith(styles);
+                }
 
+                function loadFormWith(params) {
                 window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Started", param2: "Payment Form Script" })
                 
                 try {
-                    const data = styles
+                    const data = params
                     const form = PaymentFormSdk.init(data);
                     
                     form.on('mounted', e => {
@@ -287,6 +290,13 @@
                 } catch(error) {
                     window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Error", param2: error })
                 }
+            }
+
+            function onMerchantData(params) {
+                // NOTE: This is for the backward compatibility
+                // to not display two Submit buttons on the versions before:
+                // Lumi 2.8.1 and Title 1.15.1
+                onMerchantDataValues(params.merchantData);
             }
         </script>
         
