@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    
+    <style>
+        iframe {
+          width: 100% !important;
+          border: none;
+          overflow: hidden;
+          margin-left: auto;
+          margin-right: auto;
+          padding: 0;
+        }
+        
+        .solidgate-form {
+          width: calc(100% - 48px) !important;
+          padding: 0 24px;
+        }
+
+        .paypal-button {
+          padding: 8px 24px !important;
+        }
+        
+        iframe button {
+          background-color: #000000;
+        }
+    </style>
+    
+    <body>
+        <div id="root">
+            <div id="solid-payment-form-container" class="solidgate-form"></div>
+            <div id="paypal-button" class="paypal-button"></div>
+        </div>
+        
+        <script>
+            function onPaypalLink(link) {
+                const button = document.querySelector('.paypal-button');
+                
+                button.addEventListener('button-click', (event) => {
+                    console.log(e);
+                    window.webkit.messageHandlers.buttonClick.postMessage({ param1: "button-click", param2: JSON.stringify(e) });
+                 });
+
+                button.addEventListener('order-started-processing', (e) => {
+                    console.log(e);
+                    window.webkit.messageHandlers.orderStartedProcessing.postMessage({ param1: "order-started-processing", param2: JSON.stringify(e) });
+                });
+
+                button.addEventListener('order-processed', (e) => {
+                    console.log(e);
+                    window.webkit.messageHandlers.orderProcessed.postMessage({ param1: "order-processed", param2: JSON.stringify(e) })
+                });
+
+                button.addEventListener('order-already-processed', (e) => {
+                    console.log(e);
+                    window.webkit.messageHandlers.orderAlreadyProcessed.postMessage({ param1: "order-already-processed", param2: JSON.stringify(e) });
+                });
+
+                button.addEventListener('button-ready', (e) => {
+                    console.log(e);
+                    window.webkit.messageHandlers.buttonReady.postMessage({ param1: "button-ready", param2: JSON.stringify(e) });
+                });
+                
+                button.addEventListener('button-error', (e) => {
+                    console.log(e);
+                    window.webkit.messageHandlers.buttonError.postMessage({ param1: "button-error", param2: JSON.stringify(e) });
+                });
+
+                const script = document.createElement('script');
+                script.src = link;
+                script.type = 'text/javascript';
+                script.defer = true;
+                script.setAttribute('data-script', ' ');
+                script.setAttribute('data-btn-id', 'paypal-button');
+                script.setAttribute('data-overlay', 'true');
+                script.setAttribute('data-tittle', 'Tittle for payment widget');
+                script.setAttribute('data-description', 'widget.data-description');
+                document.body.appendChild(script);
+            }
+
+            function onMerchantData(params) {
+                window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Started", param2: "Payment Form Script" })
+                
+                try {
+                    const data = params
+                    const form = PaymentFormSdk.init(data);
+                    
+                    form.on('mounted', e => {
+                      const data = e.data
+                      window.webkit.messageHandlers.messageMounted.postMessage({ param1: "MountedMessage", param2: data })
+                    })
+                    
+                    form.on('submit', e => {
+                      const data = e.data // SubmitMessage
+                      window.webkit.messageHandlers.messageSubmit.postMessage({ param1: "SubmitMessage", param2: data })
+                    })
+                    
+                    form.on('success', e => {
+                      const data = e.data // SuccessMessage
+                      window.webkit.messageHandlers.messageSuccess.postMessage({ param1: "SuccessMessage", param2: data })
+                    })
+                    
+                    form.on('fail', e => {
+                      const data = e.data // FailMessage
+                      window.webkit.messageHandlers.messageFail.postMessage({ param1: "FailMessage", param2: data })
+                    })
+                    
+                    form.on('verify', e => {
+                      const data = e.data // VerifyMessage
+                      window.webkit.messageHandlers.messageVerify.postMessage({ param1: "VerifyMessage", param2: data })
+                    })
+                    
+                    form.on('error', e => {
+                      const data = e.data // ErrorMessage
+                      window.webkit.messageHandlers.messageError.postMessage({ param1: "ErrorMessage", param2: data })
+                    })
+                    
+                    window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Success", param2: form })
+                } catch(error) {
+                    window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Error", param2: error })
+                }
+            }
+        </script>
+        
+        <script src="https://cdn.solidgate.com/js/solid-form.js"></script>
+    </body>
+</html>
