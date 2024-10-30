@@ -109,6 +109,7 @@
         <script>
             function onPaypalLink(link) {
                 const button = document.querySelector('.paypal-button');
+                button.style.visibility = "visible";
                 
                 button.addEventListener('button-click', (event) => {
                     console.log(e);
@@ -233,7 +234,6 @@
 
                 function loadFormWith(params) {
                 window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Started", param2: "Payment Form Script" })
-                
                 try {
                     const data = params
                     const form = PaymentFormSdk.init(data);
