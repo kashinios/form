@@ -153,10 +153,86 @@
             }
 
             function onMerchantData(params) {
+              const styles = {
+                    merchantData: {
+                      merchant: params.merchant,
+                      signature: params.signature,
+                      paymentIntent: params.paymentIntent
+                    },
+                    formParams: {
+                      buttonType: 'default',
+                      submitButtonText: 'Place order',
+                      isCardHolderVisible: false,
+                      hideCvvNumbers: true,
+                      headerText: 'Enter your debit or credit card details (from merchant)',
+                      titleText: 'Card info (from merchant)',
+                      formTypeClass: 'default',
+                      googleFontLink: '//fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap',
+                      autoFocus: true,
+                      allowSubmit: false
+                    },
+                    styles: {
+                        card_brands: {
+                          display: 'none',
+                        },
+                        form_body: {
+                          width: '100%',
+                        },
+                        card_number: {
+                          '.error-text': {
+                            display: 'none',
+                          },
+                          input: {
+                            'background-color': '#F9F9F9',
+                            'border-color': '#E8E8E8',
+                            ':focus': {
+                              'border-color': '#000000',
+                            },
+                            ':focus~.label': {
+                              color: '#8777D9',
+                            },
+                          },
+                        },
+                        expiry_date: {
+                          '.error-text': {
+                            display: 'none',
+                          },
+                          input: {
+                            'background-color': '#F9F9F9',
+                            'border-color': '#E8E8E8',
+                            ':focus': {
+                              'border-color': '#000000',
+                            },
+                            ':focus~.label': {
+                              color: '#8777D9',
+                            },
+                          },
+                        },
+                        card_cvv: {
+                          '.error-text': {
+                            display: 'none',
+                          },
+                          input: {
+                            'background-color': '#F9F9F9',
+                            'border-color': '#E8E8E8',
+                            ':focus': {
+                              'border-color': '#000000',
+                            },
+                            ':focus~.label': {
+                              color: '#8777D9',
+                            },
+                          },
+                        },
+                        label: {
+                          display: 'none',
+                        }
+                    }
+                  };
+
                 window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Started", param2: "Payment Form Script" })
                 
                 try {
-                    const data = params
+                    const data = styles
                     const form = PaymentFormSdk.init(data);
                     
                     form.on('mounted', e => {
