@@ -152,12 +152,12 @@
                 document.body.appendChild(script);
             }
 
-            function onMerchantData(params) {
+            function onMerchantData({merchant, signature, paymentIntent}) {
               const styles = {
                     merchantData: {
-                      merchant: params.merchant,
-                      signature: params.signature,
-                      paymentIntent: params.paymentIntent
+                      merchant: merchant,
+                      signature: signature,
+                      paymentIntent: paymentIntent
                     },
                     formParams: {
                       buttonType: 'default',
@@ -276,7 +276,7 @@
                     element.onclick = function() {
                         form.submit();
                     };
-                    
+
                     function setSubmitButtonVisible(isVisible) {
                         if(isVisible){
                             document.getElementsByClassName("custom-submit")[0].style.visibility = "visible";
