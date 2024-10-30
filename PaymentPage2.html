@@ -25,7 +25,7 @@
         border-radius: 24px;
         visibility: none;
         font-family: 'Poppins', sans-serif !important;
-        margin-bottom: 15px; /* 32px below the PayPal button */
+        margin-bottom: 10px; /* 32px below the PayPal button */
       }
 
       iframe button {
@@ -293,8 +293,6 @@
 
         function onMerchantData(params) {
             // NOTE: This is for the backward compatibility
-            // to not display two Submit buttons on the versions before:
-            // Lumi 2.8.1 and Title 1.15.1
             onMerchantDataValues(params.merchantData);
         }
     </script>
