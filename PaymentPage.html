@@ -170,6 +170,65 @@
       };
       loadFormWith(styles);
     }
+
+    function loadFormWith(params) {
+      window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Started", param2: "Payment Form Script" })
+      try {
+        const data = params
+        const form = PaymentFormSdk.init(data);
+
+        form.on('mounted', e => {
+          const data = e.data
+          window.webkit.messageHandlers.messageMounted.postMessage({ param1: "MountedMessage", param2: data })
+          setSubmitButtonVisible(true);
+        })
+
+        form.on('submit', e => {
+          const data = e.data // SubmitMessage
+          window.webkit.messageHandlers.messageSubmit.postMessage({ param1: "SubmitMessage", param2: data })
+        })
+
+        form.on('success', e => {
+          const data = e.data // SuccessMessage
+          window.webkit.messageHandlers.messageSuccess.postMessage({ param1: "SuccessMessage", param2: data })
+          setSubmitButtonVisible(false);
+        })
+
+        form.on('fail', e => {
+          const data = e.data // FailMessage
+          window.webkit.messageHandlers.messageFail.postMessage({ param1: "FailMessage", param2: data })
+          setSubmitButtonVisible(false);
+        })
+
+        form.on('verify', e => {
+          const data = e.data // VerifyMessage
+          window.webkit.messageHandlers.messageVerify.postMessage({ param1: "VerifyMessage", param2: data })
+        })
+
+        form.on('error', e => {
+          const data = e.data // ErrorMessage
+          window.webkit.messageHandlers.messageError.postMessage({ param1: "ErrorMessage", param2: data })
+          setSubmitButtonVisible(false);
+        })
+
+        window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Success", param2: form })
+
+        var element = document.getElementsByClassName("custom-submit")[0];
+        element.onclick = function () {
+          form.submit();
+        };
+
+        function setSubmitButtonVisible(isVisible) {
+          if (isVisible) {
+            document.getElementsByClassName("custom-submit")[0].style.visibility = "visible";
+          } else {
+            document.getElementsByClassName("custom-submit")[0].style.visibility = "hidden";
+          }
+        }
+      } catch (error) {
+        window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Error", param2: error })
+      }
+    }
   </script>
 
   <script src="https://cdn.solidgate.com/js/solid-form.js"></script>
