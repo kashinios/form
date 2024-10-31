@@ -248,11 +248,6 @@
                 window.webkit.messageHandlers.healthCheck.postMessage({ param1: "Initialize: Error", param2: error })
             }
         }
-
-        function onMerchantData(params) {
-            // NOTE: This is for the backward compatibility
-            onMerchantDataValues(params.merchantData);
-        }
     </script>
     
     <script src="https://cdn.solidgate.com/js/solid-form.js"></script>
