@@ -107,52 +107,6 @@
     </button>
 
     <script>
-        function onPaypalLink(link) {
-            const button = document.querySelector('.paypal-button');
-            button.style.visibility = "visible";
-
-            button.addEventListener('button-click', (event) => {
-                console.log(e);
-                window.webkit.messageHandlers.buttonClick.postMessage({ param1: "button-click", param2: JSON.stringify(e) });
-             });
-
-            button.addEventListener('order-started-processing', (e) => {
-                console.log(e);
-                window.webkit.messageHandlers.orderStartedProcessing.postMessage({ param1: "order-started-processing", param2: JSON.stringify(e) });
-            });
-
-            button.addEventListener('order-processed', (e) => {
-                console.log(e);
-                window.webkit.messageHandlers.orderProcessed.postMessage({ param1: "order-processed", param2: JSON.stringify(e) })
-            });
-
-            button.addEventListener('order-already-processed', (e) => {
-                console.log(e);
-                window.webkit.messageHandlers.orderAlreadyProcessed.postMessage({ param1: "order-already-processed", param2: JSON.stringify(e) });
-            });
-
-            button.addEventListener('button-ready', (e) => {
-                console.log(e);
-                window.webkit.messageHandlers.buttonReady.postMessage({ param1: "button-ready", param2: JSON.stringify(e) });
-            });
-            
-            button.addEventListener('button-error', (e) => {
-                console.log(e);
-                window.webkit.messageHandlers.buttonError.postMessage({ param1: "button-error", param2: JSON.stringify(e) });
-            });
-
-            const script = document.createElement('script');
-            script.src = link;
-            script.type = 'text/javascript';
-            script.defer = true;
-            script.setAttribute('data-script', ' ');
-            script.setAttribute('data-btn-id', 'paypal-button');
-            script.setAttribute('data-overlay', 'true');
-            script.setAttribute('data-tittle', 'Tittle for payment widget');
-            script.setAttribute('data-description', 'widget.data-description');
-            document.body.appendChild(script);
-        }
-
         function onMerchantDataValues({merchant, signature, paymentIntent}) {
             const styles = {
                 merchantData: {
@@ -171,6 +125,10 @@
                   googleFontLink: '//fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap',
                   autoFocus: true,
                   allowSubmit: false
+                },
+                paypalButtonParams: {
+                  enabled: true,
+                  containerId: "paypal-button"
                 },
                 styles: {
                     card_brands: {
